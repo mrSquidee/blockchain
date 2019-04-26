@@ -1,0 +1,39 @@
+<script src='//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script type=text/javascript>
+    $(document).ready(function(){
+        var socket = io.connect('http://localhost:5000/');
+
+        socket.on('makingBlock', function() {
+            document.getElementById('making').innerHTML = '<img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Loading_icon_cropped.gif" width="12"> - Mining New Block';
+        });
+        socket.on('createdBlock', function(msg) {
+            document.getElementById('making').innerHTML = '<br>';
+            document.getElementById('chainList').innerHTML = '<li>' + msg.data + '</li>' + document.getElementById('chainList').innerHTML;
+        });
+        $('a#newBlock').click(function(event) {
+            socket.emit('newBlock');
+            return false;
+        });
+    });
+</script>
+
+
+<div class='container'>
+    <h4>Mine New Block</h4>
+    <form>
+        <a href=# id=newBlock><button class='btn btn-default'>New Block</button></a>
+    </form>
+    <h4>Inspect a Block</h4>
+    <form method='POST'>
+        <input name='blockReq'>
+    </form>
+</div>
+
+<h4>Complete Chain</h4>
+<div id=making><br></div>
+<ul id=chainList>
+    {% for block in chainString %}
+    <li>{{block}}</li>
+    {% endfor %}
+</ul>

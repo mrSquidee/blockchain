@@ -8,13 +8,13 @@ class Block():
         self.nonce = -1
         self.root = '0'*64
         self.prevHash = ph
-        self.transactions: t
+        self.transactions = list(map(lambda x: vars(x), t))
         self.tree = [t]
         self.difficulty = d
         self.mined = False
 
     def makeMerkle(self):
-        self.tree.append(list(map(lambda x: sha256(x).hexdigest(), self.tree[0])))
+        self.tree.append(list(map(lambda x: x.hash, self.tree[0])))
         i = 1
         while len(self.tree[i]) != 1:
             nextLayer = []
